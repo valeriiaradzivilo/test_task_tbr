@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:test_task_tbr/screens/main_screen.dart';
 import 'package:test_task_tbr/widgets/main_text.dart';
 import 'package:test_task_tbr/widgets/search_bar.dart';
+import 'package:test_task_tbr/widgets/white_container.dart';
 
 import '../classes/country_class.dart';
 
@@ -53,13 +54,12 @@ class _CountriesScreenState extends State<CountriesScreen> {
       ),
       body: Column(
         children: [
-          searchBar(searchController, onChangedSearch),
+          whiteContainer(300,searchBar(searchController, onChangedSearch)),
           Expanded(
             child: ListView.builder(
                 padding: const EdgeInsets.all(5),
                 itemBuilder: (context, index) {
                   return Padding(
-                    key: UniqueKey(),
                     padding: const EdgeInsets.all(8.0),
                     child: GestureDetector(
                       onTap: () {

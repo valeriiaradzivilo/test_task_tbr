@@ -7,6 +7,7 @@ import 'package:locale_emoji/locale_emoji.dart' as le;
 
 import '../classes/country_class.dart';
 import '../widgets/main_text.dart';
+import '../widgets/white_container.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({Key? key}) : super(key: key);
@@ -35,7 +36,6 @@ class _MainScreenState extends State<MainScreen> {
     });
   }
 
-
   @override
   void initState() {
     uploadCountries();
@@ -55,75 +55,111 @@ class _MainScreenState extends State<MainScreen> {
         automaticallyImplyLeading: false,
         backgroundColor: backgroundColor,
         elevation: 0,
+        title: mainText("Get Started", true),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           // Add your onPressed code here!
         },
-        shape: ContinuousRectangleBorder(
-            borderRadius: BorderRadius.circular(50)
-        ),
+        shape:
+            ContinuousRectangleBorder(borderRadius: BorderRadius.circular(50)),
         backgroundColor: Colors.white,
-        child: const Icon(Icons.arrow_forward,color: Colors.blueGrey,),
+        child: const Icon(
+          Icons.arrow_forward,
+          color: Colors.blueGrey,
+        ),
       ),
       body: Visibility(
-        visible: uploadedCountries,
-        replacement: const Align(
-            alignment: Alignment.center, child: CircularProgressIndicator()),
-        child: SafeArea(
-            child: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              mainText("Get Started", true),
-              Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                countries != null
-                    ? Container(
-                        width: (0.3 * width),
-                        child: ListTile(
-                            title: Text(
-                                "${chosenCountry.flagEmoji} ${chosenCountry.phoneCode}"),
-                            onTap: () => showCupertinoModalBottomSheet(
-                                  expand: true,
-                                  context: context,
-                                  backgroundColor: Colors.transparent,
-                                  builder: (context) => CountriesScreen(
-                                    countries: countries!,
-                                  ),
-                                )),
+          visible: uploadedCountries,
+          replacement: const Align(
+              alignment: Alignment.center, child: CircularProgressIndicator()),
+          child: SafeArea(
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      countries != null
+                          ? whiteContainer(
+                              0.25 * width,
+                              ListTile(
+                                contentPadding: EdgeInsets.only(left:20),
+                                  title: Text(
+                                      "${chosenCountry.flagEmoji} ${chosenCountry.phoneCode}"),
+                                  onTap: () => showCupertinoModalBottomSheet(
+                                        expand: true,
+                                        context: context,
+                                        backgroundColor: Colors.transparent,
+                                        builder: (context) => CountriesScreen(
+                                          countries: countries!,
+                                        ),
+                                      )),
+                            )
+                          : const SizedBox(),
+
+                      whiteContainer(
+                        0.55 * width,
+                        Form(
+                          key: _formKey,
+                          child: MaskedTextField(
+                            mask: "(###) ###-####",
+                            controller: _textController,
+                            keyboardType:
+                                const TextInputType.numberWithOptions(),
+                            decoration: const InputDecoration(
+                              hintText: "(123) 123-1234",
+                              border: InputBorder.none,
+                              contentPadding: EdgeInsets.only(top:5,left: 10)
+                            ),
+                          ),
+                          onChanged: () {
+                            if (_textController.text.length == 10) {
+                              setState(() {
+                                showButton = true;
+                              });
+                            } else if (showButton) {
+                              setState(() {
+                                showButton = false;
+                              });
+                            }
+                          },
+                        ),
                       )
-                    : const SizedBox(),
-                Container(
-                  width: (0.5 * width),
-                  child: Form(
-                    key: _formKey,
-                    child: MaskedTextField(
-                      mask: "(###) ###-####",
-                      controller: _textController,
-                      keyboardType: const TextInputType.numberWithOptions(),
-                      decoration: const InputDecoration(
-                        hintText: "(123) 123-1234",
-                      ),
-                    ),
-                    onChanged: () {
-                      if (_textController.text.length == 10) {
-                        setState(() {
-                          showButton = true;
-                        });
-                      } else if (showButton) {
-                        setState(() {
-                          showButton = false;
-                        });
-                      }
-                    },
-                  ),
-                ),
-              ]),
-            ],
-          ),
-        )),
-      ),
+                      // Padding(
+                      //   padding: const EdgeInsets.all(8.0),
+                      //   child: Container(
+                      //     width: (0.5 * width),
+                      //     child: Form(
+                      //       key: _formKey,
+                      //       child: MaskedTextField(
+                      //         mask: "(###) ###-####",
+                      //         controller: _textController,
+                      //         keyboardType:
+                      //             const TextInputType.numberWithOptions(),
+                      //         decoration: const InputDecoration(
+                      //           hintText: "(123) 123-1234",
+                      //         ),
+                      //       ),
+                      //       onChanged: () {
+                      //         if (_textController.text.length == 10) {
+                      //           setState(() {
+                      //             showButton = true;
+                      //           });
+                      //         } else if (showButton) {
+                      //           setState(() {
+                      //             showButton = false;
+                      //           });
+                      //         }
+                      //       },
+                      //     ),
+                      //   ),
+                      // ),
+                    ]),
+              ),
+            ),
+          )),
     );
   }
 }
