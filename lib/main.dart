@@ -4,13 +4,13 @@ import 'package:test_task_tbr/screens/main_screen.dart';
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
 
-  runApp(MyApp(isLocationEnabled: false));
+  runApp(MyApp());
 
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key, required this.isLocationEnabled});
-  final bool isLocationEnabled;
+  const MyApp({super.key});
+
 
   // This widget is the root of your application.
   @override
@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.deepPurple,
       ),
-      home: MainScreen(isLocationEnabled: isLocationEnabled,),
+      home: MainScreen(),
     );
   }
 }

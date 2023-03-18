@@ -1,5 +1,6 @@
-import 'package:country_picker/country_picker.dart';
 import 'package:http/http.dart' as http;
+
+import '../classes/country_class.dart';
 class CountryAPI{
   static String baseUrl = 'https://restcountries.com/v3.1/all';
   static String nameEndpoint = '/name';
@@ -11,9 +12,9 @@ class CountryAPI{
       var result = await http.get(url);
       if (result.statusCode == 200)
         {
-          print(result);
+          var json = result.body;
+          return commentFromJson(json);
         }
-      print(result.statusCode);
     }catch(e)
     {
       print("Error: $e");
