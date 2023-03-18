@@ -26,7 +26,6 @@ class _MainScreenState extends State<MainScreen> {
   bool uploadedCountries = false;
   late Country chosenCountry;
 
-
   Future uploadCountries() async {
     countries = await countryAPI.getCountries();
     countries!.sort(countries!.elementAt(0).compareCountryName);
@@ -36,6 +35,7 @@ class _MainScreenState extends State<MainScreen> {
     });
   }
 
+
   @override
   void initState() {
     uploadCountries();
@@ -44,7 +44,7 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if (ModalRoute.of(context)!.settings.arguments!=null) {
+    if (ModalRoute.of(context)!.settings.arguments != null) {
       chosenCountry = ModalRoute.of(context)!.settings.arguments as Country;
     }
     double width = MediaQuery.of(context).size.width;
@@ -56,21 +56,31 @@ class _MainScreenState extends State<MainScreen> {
         backgroundColor: backgroundColor,
         elevation: 0,
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          // Add your onPressed code here!
+        },
+        shape: ContinuousRectangleBorder(
+            borderRadius: BorderRadius.circular(50)
+        ),
+        backgroundColor: Colors.white,
+        child: const Icon(Icons.arrow_forward,color: Colors.blueGrey,),
+      ),
       body: Visibility(
         visible: uploadedCountries,
         replacement: const Align(
             alignment: Alignment.center, child: CircularProgressIndicator()),
         child: SafeArea(
             child: Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+          padding: const EdgeInsets.all(10.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
               mainText("Get Started", true),
               Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                 countries != null
                     ? Container(
-                        width: (0.3*width),
+                        width: (0.3 * width),
                         child: ListTile(
                             title: Text(
                                 "${chosenCountry.flagEmoji} ${chosenCountry.phoneCode}"),
@@ -85,20 +95,23 @@ class _MainScreenState extends State<MainScreen> {
                       )
                     : const SizedBox(),
                 Container(
-                  width: (0.5*width),
+                  width: (0.5 * width),
                   child: Form(
                     key: _formKey,
                     child: MaskedTextField(
                       mask: "(###) ###-####",
                       controller: _textController,
                       keyboardType: const TextInputType.numberWithOptions(),
+                      decoration: const InputDecoration(
+                        hintText: "(123) 123-1234",
+                      ),
                     ),
                     onChanged: () {
                       if (_textController.text.length == 10) {
                         setState(() {
                           showButton = true;
                         });
-                      } else if(showButton) {
+                      } else if (showButton) {
                         setState(() {
                           showButton = false;
                         });
@@ -107,9 +120,9 @@ class _MainScreenState extends State<MainScreen> {
                   ),
                 ),
               ]),
-          ],
-        ),
-            )),
+            ],
+          ),
+        )),
       ),
     );
   }

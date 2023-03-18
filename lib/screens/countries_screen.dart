@@ -16,7 +16,7 @@ class CountriesScreen extends StatefulWidget {
 
 class _CountriesScreenState extends State<CountriesScreen> {
   Color backgroundColor = const Color(0xFF8eaafb);
-  List<Country>copyOfCountries = [];
+  List<Country> copyOfCountries = [];
   TextEditingController searchController = TextEditingController();
 
   @override
@@ -24,6 +24,23 @@ class _CountriesScreenState extends State<CountriesScreen> {
     copyOfCountries = [...widget.countries!];
     super.initState();
   }
+
+  onChangedSearch(value) {
+    if (value == "") {
+      copyOfCountries = [...widget.countries!];
+    } else {
+      copyOfCountries.clear();
+      for (int i = 0; i < widget.countries!.length; i++) {
+        Country c = widget.countries!.elementAt(i);
+        if (c.fullName.toLowerCase().contains(value) ||
+            c.name.toLowerCase().contains(value)) {
+          copyOfCountries.add(c);
+        }
+      }
+    }
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,18 +53,18 @@ class _CountriesScreenState extends State<CountriesScreen> {
       ),
       body: Column(
         children: [
-          searchBar(searchController,widget.countries!, copyOfCountries),
+          searchBar(searchController, onChangedSearch),
           Expanded(
             child: ListView.builder(
-                padding: EdgeInsets.all(5),
+                padding: const EdgeInsets.all(5),
                 itemBuilder: (context, index) {
                   return Padding(
+                    key: UniqueKey(),
                     padding: const EdgeInsets.all(8.0),
                     child: GestureDetector(
                       onTap: () {
-                        Navigator.popAndPushNamed(
-                          context, MainScreen.routeName, arguments: copyOfCountries.elementAt(index)
-                        );
+                        Navigator.popAndPushNamed(context, MainScreen.routeName,
+                            arguments: copyOfCountries.elementAt(index));
                       },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,

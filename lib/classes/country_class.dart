@@ -34,7 +34,7 @@ class Country{
   }
 
   int compareCountryName(Country a, Country b) {
-    return a.fullName.compareTo(b.fullName);
+    return a.name.compareTo(b.name);
   }
 
 

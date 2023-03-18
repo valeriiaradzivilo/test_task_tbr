@@ -21,6 +21,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.deepPurple,
       ),
+      debugShowCheckedModeBanner: false,
       routes: {
         '/':(context) => const MainScreen(),
         '/countries':(context) => const CountriesScreen(countries: null),
