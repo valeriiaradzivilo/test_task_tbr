@@ -54,7 +54,7 @@ class _MainScreenState extends State<MainScreen> {
       ),
       body: Visibility(
         visible: uploadedCountries,
-        replacement: CircularProgressIndicator(),
+        replacement: const Center(child: CircularProgressIndicator()),
         child: SafeArea(
             child: Column(
           children: [
