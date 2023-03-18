@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:test_task_tbr/screens/countries_screen.dart';
 import 'package:test_task_tbr/screens/main_screen.dart';
 
 void main() async{
@@ -20,7 +21,10 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.deepPurple,
       ),
-      home: MainScreen(),
+      routes: {
+        '/':(context) => const MainScreen(),
+        '/countries':(context) => const CountriesScreen(countries: null),
+      },
     );
   }
 }

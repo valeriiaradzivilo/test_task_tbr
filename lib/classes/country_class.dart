@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-List<Country> commentFromJson(String str) => List<Country>.from(json.decode(str).map((x) =>
+List<Country> countryFromJson(String str) => List<Country>.from(json.decode(str).map((x) =>
 Country.fromJson(x)).where((c) => c.phoneCode != "null"));
 class Country{
   String phoneCode;

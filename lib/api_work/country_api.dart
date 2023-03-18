@@ -13,7 +13,7 @@ class CountryAPI{
       if (result.statusCode == 200)
         {
           var json = result.body;
-          return commentFromJson(json);
+          return countryFromJson(json);
         }
     }catch(e)
     {
