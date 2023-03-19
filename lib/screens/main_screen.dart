@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:masked_text/masked_text.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:sizer/sizer.dart';
 import 'package:test_task_tbr/api_work/country_api.dart';
 import 'package:test_task_tbr/screens/countries_screen.dart';
-import 'package:locale_emoji/locale_emoji.dart' as le;
-
 import '../classes/country_class.dart';
 import '../widgets/main_text.dart';
 import '../widgets/white_container.dart';
@@ -19,7 +18,6 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   Color backgroundColor = const Color(0xFF8eaafb);
-  final _formKey = GlobalKey<FormState>();
   final TextEditingController _textController = TextEditingController();
   bool showButton = false;
   List<Country>? countries;
@@ -47,8 +45,7 @@ class _MainScreenState extends State<MainScreen> {
     if (ModalRoute.of(context)!.settings.arguments != null) {
       chosenCountry = ModalRoute.of(context)!.settings.arguments as Country;
     }
-    double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.height;
+
     return Scaffold(
       backgroundColor: backgroundColor,
       appBar: AppBar(
@@ -58,12 +55,40 @@ class _MainScreenState extends State<MainScreen> {
         title: mainText("Get Started", true),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Add your onPressed code here!
-        },
+        onPressed: showButton
+            ? () {
+          showDialog<void>(
+              context: context,
+              builder: (BuildContext context) {
+                return SimpleDialog(
+                  title: const Text('Your phone number is'),
+                  children: <Widget>[
+                    SimpleDialogOption(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text("${chosenCountry.phoneCode}${_textController.text}"),
+                    ),
+                    SimpleDialogOption(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text('Country ${chosenCountry.name}'),
+                    ),
+                    SimpleDialogOption(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text('Flag ${chosenCountry.flagEmoji}'),
+                    ),
+                  ],
+                );
+              });
+              }
+            : null,
         shape:
             ContinuousRectangleBorder(borderRadius: BorderRadius.circular(50)),
-        backgroundColor: Colors.white,
+        backgroundColor: showButton?Colors.white:Colors.white30,
         child: const Icon(
           Icons.arrow_forward,
           color: Colors.blueGrey,
@@ -83,9 +108,9 @@ class _MainScreenState extends State<MainScreen> {
                     children: [
                       countries != null
                           ? whiteContainer(
-                              0.25 * width,
+                              25.w,
                               ListTile(
-                                contentPadding: EdgeInsets.only(left:20),
+                                  contentPadding: EdgeInsets.only(left: 20),
                                   title: Text(
                                       "${chosenCountry.flagEmoji} ${chosenCountry.phoneCode}"),
                                   onTap: () => showCupertinoModalBottomSheet(
@@ -98,64 +123,28 @@ class _MainScreenState extends State<MainScreen> {
                                       )),
                             )
                           : const SizedBox(),
-
                       whiteContainer(
-                        0.55 * width,
-                        Form(
-                          key: _formKey,
-                          child: MaskedTextField(
+                        55.w,
+                        MaskedTextField(
+                            maxLines: 1,
                             mask: "(###) ###-####",
                             controller: _textController,
                             keyboardType:
                                 const TextInputType.numberWithOptions(),
                             decoration: const InputDecoration(
-                              hintText: "(123) 123-1234",
-                              border: InputBorder.none,
-                              contentPadding: EdgeInsets.only(top:5,left: 10)
-                            ),
-                          ),
-                          onChanged: () {
-                            if (_textController.text.length == 10) {
-                              setState(() {
-                                showButton = true;
-                              });
-                            } else if (showButton) {
-                              setState(() {
-                                showButton = false;
-                              });
-                            }
-                          },
-                        ),
-                      )
-                      // Padding(
-                      //   padding: const EdgeInsets.all(8.0),
-                      //   child: Container(
-                      //     width: (0.5 * width),
-                      //     child: Form(
-                      //       key: _formKey,
-                      //       child: MaskedTextField(
-                      //         mask: "(###) ###-####",
-                      //         controller: _textController,
-                      //         keyboardType:
-                      //             const TextInputType.numberWithOptions(),
-                      //         decoration: const InputDecoration(
-                      //           hintText: "(123) 123-1234",
-                      //         ),
-                      //       ),
-                      //       onChanged: () {
-                      //         if (_textController.text.length == 10) {
-                      //           setState(() {
-                      //             showButton = true;
-                      //           });
-                      //         } else if (showButton) {
-                      //           setState(() {
-                      //             showButton = false;
-                      //           });
-                      //         }
-                      //       },
-                      //     ),
-                      //   ),
-                      // ),
+                                hintText: "Your phone number",
+                                border: InputBorder.none,
+                                contentPadding:
+                                    EdgeInsets.only(top: 5, left: 15)),
+                            onChanged: (value) {
+                              if(value.length==14||(value.length<14&&showButton)) {
+                                setState(() {
+                                  showButton =
+                                      _textController.text.length == 14;
+                                });
+                              }
+                            }),
+                      ),
                     ]),
               ),
             ),

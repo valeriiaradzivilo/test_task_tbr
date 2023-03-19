@@ -32,6 +32,7 @@ dependencies:
   http: ^0.13.4
   locale_emoji: ^0.2.1
   google_fonts: ^4.0.3
+  sizer: ^2.0.15
 
 dev_dependencies:
   flutter_test:

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:sizer/sizer.dart';
 import 'package:test_task_tbr/screens/main_screen.dart';
 import 'package:test_task_tbr/widgets/main_text.dart';
 import 'package:test_task_tbr/widgets/search_bar.dart';
@@ -33,8 +34,8 @@ class _CountriesScreenState extends State<CountriesScreen> {
       copyOfCountries.clear();
       for (int i = 0; i < widget.countries!.length; i++) {
         Country c = widget.countries!.elementAt(i);
-        if (c.fullName.toLowerCase().contains(value) ||
-            c.name.toLowerCase().contains(value)) {
+        if (c.fullName.toLowerCase().contains(value.toString().toLowerCase()) ||
+            c.name.toLowerCase().contains(value.toString().toLowerCase())) {
           copyOfCountries.add(c);
         }
       }
@@ -51,10 +52,13 @@ class _CountriesScreenState extends State<CountriesScreen> {
         title: mainText("Country code", true),
         backgroundColor: backgroundColor,
         elevation: 0,
+        actions: [
+          IconButton(onPressed: ()=>Navigator.pop(context), icon: const Icon(Icons.close))
+        ],
       ),
       body: Column(
         children: [
-          whiteContainer(300,searchBar(searchController, onChangedSearch)),
+          whiteContainer(90.w,searchBar(searchController, onChangedSearch)),
           Expanded(
             child: ListView.builder(
                 padding: const EdgeInsets.all(5),
