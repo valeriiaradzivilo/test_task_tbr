@@ -1,3 +1,6 @@
+import 'dart:io';
+import 'package:geocoding/geocoding.dart';
+import 'package:location/location.dart' as loc;
 import 'package:flutter/material.dart';
 import 'package:masked_text/masked_text.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
@@ -29,15 +32,54 @@ class _MainScreenState extends State<MainScreen> {
     countries = await countryAPI.getCountries();
     countries!.sort(countries!.elementAt(0).compareCountryName);
     setState(() {
-      uploadedCountries = true;
       chosenCountry = countries!.elementAt(0);
+      uploadedCountries = true;
     });
   }
 
   @override
   void initState() {
     uploadCountries();
+    getCountryName();
     super.initState();
+  }
+
+  Future<void> getCountryName() async {
+
+    loc.Location location = loc.Location();
+
+    bool _serviceEnabled;
+    loc.PermissionStatus _permissionGranted;
+    loc.LocationData _locationData;
+
+    _serviceEnabled = await location.serviceEnabled();
+    if (!_serviceEnabled) {
+      _serviceEnabled = await location.requestService();
+      if (!_serviceEnabled) {
+        return;
+      }
+    }
+
+    _permissionGranted = await location.hasPermission();
+    if (_permissionGranted == loc.PermissionStatus.denied) {
+      _permissionGranted = await location.requestPermission();
+      if (_permissionGranted != loc.PermissionStatus.granted) {
+        return;
+      }
+    }
+
+    _locationData = await location.getLocation();
+    List<Placemark> pl = await placemarkFromCoordinates(_locationData.latitude!,_locationData.longitude!);
+
+    countries?.forEach((element) {
+      if(element.name.toLowerCase()==pl[0].country!.toLowerCase()||element.fullName.toLowerCase()==pl[0].country!.toLowerCase())
+        {
+          setState(() {
+            chosenCountry = element;
+          });
+
+        }
+    });
   }
 
   @override

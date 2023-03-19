@@ -5,8 +5,10 @@
 import FlutterMacOS
 import Foundation
 
-import path_provider_foundation
+import devicelocale
+import location
 
 func RegisterGeneratedPlugins(registry: FlutterPluginRegistry) {
-  PathProviderPlugin.register(with: registry.registrar(forPlugin: "PathProviderPlugin"))
+  DevicelocalePlugin.register(with: registry.registrar(forPlugin: "DevicelocalePlugin"))
+  LocationPlugin.register(with: registry.registrar(forPlugin: "LocationPlugin"))
 }

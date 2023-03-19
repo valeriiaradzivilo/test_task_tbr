@@ -30,9 +30,11 @@ dependencies:
   modal_bottom_sheet: ^3.0.0-pre
   masked_text: ^1.1.2
   http: ^0.13.4
-  locale_emoji: ^0.2.1
-  google_fonts: ^4.0.3
   sizer: ^2.0.15
+  devicelocale: ^0.6.0
+  location: ^4.4.0
+  geocoding: ^2.1.0
+
 
 dev_dependencies:
   flutter_test:
