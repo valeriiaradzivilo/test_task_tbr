@@ -6,25 +6,19 @@ SimpleDialog infoDialogue(BuildContext context, TextEditingController textContro
   return SimpleDialog(
     title: const Text('Your phone number is'),
     children: <Widget>[
-      SimpleDialogOption(
-        onPressed: () {
-          Navigator.of(context).pop();
-        },
-        child: Text(
-            "${chosenCountry.phoneCode}${textController.text}"),
-      ),
-      SimpleDialogOption(
-        onPressed: () {
-          Navigator.of(context).pop();
-        },
-        child: Text('Country ${chosenCountry.name}'),
-      ),
-      SimpleDialogOption(
-        onPressed: () {
-          Navigator.of(context).pop();
-        },
-        child: Text('Flag ${chosenCountry.flagEmoji}'),
-      ),
+      dialogueOption("${chosenCountry.phoneCode}${textController.text}", context),
+      dialogueOption("Country ${chosenCountry.name}", context),
+      dialogueOption('Flag ${chosenCountry.flagEmoji}', context),
     ],
+  );
+}
+
+SimpleDialogOption dialogueOption(String text, BuildContext context)
+{
+  return SimpleDialogOption(
+    onPressed: () {
+      Navigator.of(context).pop();
+    },
+    child: Text(text),
   );
 }

@@ -18,8 +18,8 @@ class CountriesScreen extends StatefulWidget {
 
 class _CountriesScreenState extends State<CountriesScreen> {
   late Color backgroundColor;
-  List<Country> copyOfCountries = [];
-  TextEditingController searchController = TextEditingController();
+  List<Country> copyOfCountries = []; // this copy os required for search
+  TextEditingController searchController = TextEditingController(); // controls search input
 
   @override
   void initState() {
@@ -36,8 +36,8 @@ class _CountriesScreenState extends State<CountriesScreen> {
       for (int i = 0; i < widget.countries!.length; i++) {
         Country c = widget.countries!.elementAt(i);
         if (c.fullName.toLowerCase().contains(value.toString().toLowerCase()) ||
-            c.name.toLowerCase().contains(value.toString().toLowerCase())||
-        c.phoneCode.contains(value)) {
+            c.name.toLowerCase().contains(value.toString().toLowerCase()) ||
+            c.phoneCode.contains(value)) {
           copyOfCountries.add(c);
         }
       }
@@ -55,12 +55,14 @@ class _CountriesScreenState extends State<CountriesScreen> {
         backgroundColor: backgroundColor,
         elevation: 0,
         actions: [
-          IconButton(onPressed: ()=>Navigator.pop(context), icon: const Icon(Icons.close))
+          IconButton(
+              onPressed: () => Navigator.pop(context),
+              icon: const Icon(Icons.close))
         ],
       ),
       body: Column(
         children: [
-          whiteContainer(90.w,searchBar(searchController, onChangedSearch)),
+          whiteContainer(90.w, searchBar(searchController, onChangedSearch)),
           Expanded(
             child: ListView.builder(
                 padding: const EdgeInsets.all(5),
@@ -69,7 +71,8 @@ class _CountriesScreenState extends State<CountriesScreen> {
                     padding: const EdgeInsets.all(8.0),
                     child: GestureDetector(
                       onTap: () {
-                        Navigator.pushReplacementNamed(context, MainScreen.routeName,
+                        Navigator.pushReplacementNamed(
+                            context, MainScreen.routeName,
                             arguments: copyOfCountries.elementAt(index));
                       },
                       child: Row(
