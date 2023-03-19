@@ -6,7 +6,7 @@ import 'package:test_task_tbr/screens/main_screen.dart';
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
 
-  runApp(MyApp());
+  runApp(const MyApp());
 
 }
 
@@ -26,6 +26,7 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.deepPurple,
         ),
         debugShowCheckedModeBanner: false,
+        initialRoute: '/',
         routes: {
           '/': (context) => const MainScreen(),
           '/countries': (context) => const CountriesScreen(countries: null),

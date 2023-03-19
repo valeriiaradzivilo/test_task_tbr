@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 import 'package:test_task_tbr/screens/main_screen.dart';
@@ -35,7 +34,8 @@ class _CountriesScreenState extends State<CountriesScreen> {
       for (int i = 0; i < widget.countries!.length; i++) {
         Country c = widget.countries!.elementAt(i);
         if (c.fullName.toLowerCase().contains(value.toString().toLowerCase()) ||
-            c.name.toLowerCase().contains(value.toString().toLowerCase())) {
+            c.name.toLowerCase().contains(value.toString().toLowerCase())||
+        c.phoneCode.contains(value)) {
           copyOfCountries.add(c);
         }
       }
@@ -74,7 +74,7 @@ class _CountriesScreenState extends State<CountriesScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Container(
+                          SizedBox(
                               width: 80,
                               child: Text(
                                   "${copyOfCountries.elementAt(index).flagEmoji}  ${copyOfCountries.elementAt(index).phoneCode} ")),

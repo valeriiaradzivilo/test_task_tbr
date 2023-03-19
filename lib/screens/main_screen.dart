@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:geocoding/geocoding.dart';
 import 'package:location/location.dart' as loc;
 import 'package:flutter/material.dart';
@@ -30,61 +29,62 @@ class _MainScreenState extends State<MainScreen> {
 
   Future uploadCountries() async {
     countries = await countryAPI.getCountries();
-    countries!.sort(countries!.elementAt(0).compareCountryName);
-    setState(() {
-      chosenCountry = countries!.elementAt(0);
-      uploadedCountries = true;
-    });
+    if(countries!=null) {
+      countries!.sort(countries!.elementAt(0).compareCountryName);
+      setState(() {
+        chosenCountry = countries!.elementAt(0);
+        uploadedCountries = true;
+      });
+    }
   }
 
   @override
   void initState() {
     uploadCountries();
-    getCountryName();
+    getUserCountryLocation();
     super.initState();
   }
 
-  Future<void> getCountryName() async {
-
+  Future<void> getUserCountryLocation() async {
     loc.Location location = loc.Location();
 
-    bool _serviceEnabled;
-    loc.PermissionStatus _permissionGranted;
-    loc.LocationData _locationData;
+    bool serviceEnabled;
+    loc.PermissionStatus permissionGranted;
+    loc.LocationData locationData;
 
-    _serviceEnabled = await location.serviceEnabled();
-    if (!_serviceEnabled) {
-      _serviceEnabled = await location.requestService();
-      if (!_serviceEnabled) {
+    serviceEnabled = await location.serviceEnabled();
+    if (!serviceEnabled) {
+      serviceEnabled = await location.requestService();
+      if (!serviceEnabled) {
         return;
       }
     }
 
-    _permissionGranted = await location.hasPermission();
-    if (_permissionGranted == loc.PermissionStatus.denied) {
-      _permissionGranted = await location.requestPermission();
-      if (_permissionGranted != loc.PermissionStatus.granted) {
+    permissionGranted = await location.hasPermission();
+    if (permissionGranted == loc.PermissionStatus.denied) {
+      permissionGranted = await location.requestPermission();
+      if (permissionGranted != loc.PermissionStatus.granted) {
         return;
       }
     }
 
-    _locationData = await location.getLocation();
-    List<Placemark> pl = await placemarkFromCoordinates(_locationData.latitude!,_locationData.longitude!);
+    locationData = await location.getLocation();
+    List<Placemark> pl = await placemarkFromCoordinates(
+        locationData.latitude!, locationData.longitude!);
 
     countries?.forEach((element) {
-      if(element.name.toLowerCase()==pl[0].country!.toLowerCase()||element.fullName.toLowerCase()==pl[0].country!.toLowerCase())
-        {
-          setState(() {
-            chosenCountry = element;
-          });
-
-        }
+      if (element.name.toLowerCase() == pl[0].country!.toLowerCase() ||
+          element.fullName.toLowerCase() == pl[0].country!.toLowerCase()) {
+        setState(() {
+          chosenCountry = element;
+        });
+      }
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    if (ModalRoute.of(context)!.settings.arguments != null) {
+    if (ModalRoute.of(context)!=null&&ModalRoute.of(context)!.settings.arguments != null) {
       chosenCountry = ModalRoute.of(context)!.settings.arguments as Country;
     }
 
@@ -99,38 +99,39 @@ class _MainScreenState extends State<MainScreen> {
       floatingActionButton: FloatingActionButton(
         onPressed: showButton
             ? () {
-          showDialog<void>(
-              context: context,
-              builder: (BuildContext context) {
-                return SimpleDialog(
-                  title: const Text('Your phone number is'),
-                  children: <Widget>[
-                    SimpleDialogOption(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: Text("${chosenCountry.phoneCode}${_textController.text}"),
-                    ),
-                    SimpleDialogOption(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: Text('Country ${chosenCountry.name}'),
-                    ),
-                    SimpleDialogOption(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: Text('Flag ${chosenCountry.flagEmoji}'),
-                    ),
-                  ],
-                );
-              });
+                showDialog<void>(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return SimpleDialog(
+                        title: const Text('Your phone number is'),
+                        children: <Widget>[
+                          SimpleDialogOption(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Text(
+                                "${chosenCountry.phoneCode}${_textController.text}"),
+                          ),
+                          SimpleDialogOption(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Text('Country ${chosenCountry.name}'),
+                          ),
+                          SimpleDialogOption(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Text('Flag ${chosenCountry.flagEmoji}'),
+                          ),
+                        ],
+                      );
+                    });
               }
             : null,
         shape:
             ContinuousRectangleBorder(borderRadius: BorderRadius.circular(50)),
-        backgroundColor: showButton?Colors.white:Colors.white30,
+        backgroundColor: showButton ? Colors.white : Colors.white30,
         child: const Icon(
           Icons.arrow_forward,
           color: Colors.blueGrey,
@@ -150,9 +151,8 @@ class _MainScreenState extends State<MainScreen> {
                     children: [
                       countries != null
                           ? whiteContainer(
-                              25.w,
+                              30.w,
                               ListTile(
-                                  contentPadding: EdgeInsets.only(left: 20),
                                   title: Text(
                                       "${chosenCountry.flagEmoji} ${chosenCountry.phoneCode}"),
                                   onTap: () => showCupertinoModalBottomSheet(
@@ -166,7 +166,7 @@ class _MainScreenState extends State<MainScreen> {
                             )
                           : const SizedBox(),
                       whiteContainer(
-                        55.w,
+                        50.w,
                         MaskedTextField(
                             maxLines: 1,
                             mask: "(###) ###-####",
@@ -177,9 +177,10 @@ class _MainScreenState extends State<MainScreen> {
                                 hintText: "Your phone number",
                                 border: InputBorder.none,
                                 contentPadding:
-                                    EdgeInsets.only(top: 5, left: 15)),
+                                    EdgeInsets.only(left: 15)),
                             onChanged: (value) {
-                              if(value.length==14||(value.length<14&&showButton)) {
+                              if (value.length == 14 ||
+                                  (value.length < 14 && showButton)) {
                                 setState(() {
                                   showButton =
                                       _textController.text.length == 14;

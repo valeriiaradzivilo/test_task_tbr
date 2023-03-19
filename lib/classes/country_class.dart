@@ -12,7 +12,7 @@ class Country{
   Country(this.phoneCode,this.name,this.fullName,this.flagEmoji);
 
 
-  Country baseCounty ()
+  static Country baseCounty ()
   {
     return Country("+380", "Ukraine", "Ukraine", "\uD83C\uDDFA\uD83C\uDDE6");
   }
