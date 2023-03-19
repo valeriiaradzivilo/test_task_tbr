@@ -12,11 +12,6 @@ class Country{
   Country(this.phoneCode,this.name,this.fullName,this.flagEmoji);
 
 
-  static Country baseCounty ()
-  {
-    return Country("+380", "Ukraine", "Ukraine", "\uD83C\uDDFA\uD83C\uDDE6");
-  }
-
   factory Country.fromJson(Map<String,dynamic> jsonResult){
     return Country(
         "${jsonResult["idd"]["root"]}${jsonResult["idd"]["suffixes"] != null

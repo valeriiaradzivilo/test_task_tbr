@@ -12,6 +12,7 @@ void main() async{
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
+  static Color backgroundColor = const Color(0xFF8eaafb);
 
 
   // This widget is the root of your application.

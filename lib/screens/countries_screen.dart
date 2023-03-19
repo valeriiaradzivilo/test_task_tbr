@@ -6,6 +6,7 @@ import 'package:test_task_tbr/widgets/search_bar.dart';
 import 'package:test_task_tbr/widgets/white_container.dart';
 
 import '../classes/country_class.dart';
+import '../main.dart';
 
 class CountriesScreen extends StatefulWidget {
   const CountriesScreen({Key? key, required this.countries}) : super(key: key);
@@ -16,12 +17,13 @@ class CountriesScreen extends StatefulWidget {
 }
 
 class _CountriesScreenState extends State<CountriesScreen> {
-  Color backgroundColor = const Color(0xFF8eaafb);
+  late Color backgroundColor;
   List<Country> copyOfCountries = [];
   TextEditingController searchController = TextEditingController();
 
   @override
   void initState() {
+    backgroundColor = MyApp.backgroundColor;
     copyOfCountries = [...widget.countries!];
     super.initState();
   }
@@ -67,7 +69,7 @@ class _CountriesScreenState extends State<CountriesScreen> {
                     padding: const EdgeInsets.all(8.0),
                     child: GestureDetector(
                       onTap: () {
-                        Navigator.popAndPushNamed(context, MainScreen.routeName,
+                        Navigator.pushReplacementNamed(context, MainScreen.routeName,
                             arguments: copyOfCountries.elementAt(index));
                       },
                       child: Row(

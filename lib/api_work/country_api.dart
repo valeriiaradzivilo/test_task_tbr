@@ -3,8 +3,6 @@ import 'package:http/http.dart' as http;
 import '../classes/country_class.dart';
 class CountryAPI{
   static String baseUrl = 'https://restcountries.com/v3.1/all';
-  static String nameEndpoint = '/name';
-
 
   Future <List<Country>?> getCountries ()async{
     try{

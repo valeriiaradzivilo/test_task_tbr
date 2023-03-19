@@ -5,9 +5,11 @@ import 'package:masked_text/masked_text.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:sizer/sizer.dart';
 import 'package:test_task_tbr/api_work/country_api.dart';
+import 'package:test_task_tbr/main.dart';
 import 'package:test_task_tbr/screens/countries_screen.dart';
 import '../classes/country_class.dart';
 import '../widgets/main_text.dart';
+import '../widgets/simple_dialogue.dart';
 import '../widgets/white_container.dart';
 
 class MainScreen extends StatefulWidget {
@@ -19,8 +21,8 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  Color backgroundColor = const Color(0xFF8eaafb);
-  final TextEditingController _textController = TextEditingController();
+  late Color backgroundColor ;
+  final TextEditingController _phoneController = TextEditingController();
   bool showButton = false;
   List<Country>? countries;
   CountryAPI countryAPI = CountryAPI();
@@ -29,7 +31,7 @@ class _MainScreenState extends State<MainScreen> {
 
   Future uploadCountries() async {
     countries = await countryAPI.getCountries();
-    if(countries!=null) {
+    if (countries != null) {
       countries!.sort(countries!.elementAt(0).compareCountryName);
       setState(() {
         chosenCountry = countries!.elementAt(0);
@@ -40,6 +42,7 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   void initState() {
+    backgroundColor = MyApp.backgroundColor;
     uploadCountries();
     getUserCountryLocation();
     super.initState();
@@ -84,7 +87,8 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if (ModalRoute.of(context)!=null&&ModalRoute.of(context)!.settings.arguments != null) {
+    if (ModalRoute.of(context) != null &&
+        ModalRoute.of(context)!.settings.arguments != null) {
       chosenCountry = ModalRoute.of(context)!.settings.arguments as Country;
     }
 
@@ -102,30 +106,8 @@ class _MainScreenState extends State<MainScreen> {
                 showDialog<void>(
                     context: context,
                     builder: (BuildContext context) {
-                      return SimpleDialog(
-                        title: const Text('Your phone number is'),
-                        children: <Widget>[
-                          SimpleDialogOption(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                            child: Text(
-                                "${chosenCountry.phoneCode}${_textController.text}"),
-                          ),
-                          SimpleDialogOption(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                            child: Text('Country ${chosenCountry.name}'),
-                          ),
-                          SimpleDialogOption(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                            child: Text('Flag ${chosenCountry.flagEmoji}'),
-                          ),
-                        ],
-                      );
+                      return infoDialogue(
+                          context, _phoneController, chosenCountry);
                     });
               }
             : null,
@@ -156,7 +138,7 @@ class _MainScreenState extends State<MainScreen> {
                                   title: Text(
                                       "${chosenCountry.flagEmoji} ${chosenCountry.phoneCode}"),
                                   onTap: () => showCupertinoModalBottomSheet(
-                                        expand: true,
+                                        expand: false,
                                         context: context,
                                         backgroundColor: Colors.transparent,
                                         builder: (context) => CountriesScreen(
@@ -170,20 +152,21 @@ class _MainScreenState extends State<MainScreen> {
                         MaskedTextField(
                             maxLines: 1,
                             mask: "(###) ###-####",
-                            controller: _textController,
+                            controller: _phoneController,
+                            maxLength: 14,
                             keyboardType:
                                 const TextInputType.numberWithOptions(),
                             decoration: const InputDecoration(
                                 hintText: "Your phone number",
                                 border: InputBorder.none,
-                                contentPadding:
-                                    EdgeInsets.only(left: 15)),
+                                counterText: "",
+                                contentPadding: EdgeInsets.only(left: 15)),
                             onChanged: (value) {
                               if (value.length == 14 ||
                                   (value.length < 14 && showButton)) {
                                 setState(() {
                                   showButton =
-                                      _textController.text.length == 14;
+                                      _phoneController.text.length == 14;
                                 });
                               }
                             }),
