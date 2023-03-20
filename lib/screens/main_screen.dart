@@ -48,6 +48,8 @@ class _MainScreenState extends State<MainScreen> {
     super.initState();
   }
 
+
+  // ask for permission to use location and update country in case person agrees
   Future<void> getUserCountryLocation() async {
     loc.Location location = loc.Location();
 
@@ -70,6 +72,9 @@ class _MainScreenState extends State<MainScreen> {
         return;
       }
     }
+    setState(() {
+      uploadedCountries = false;
+    });
 
     locationData = await location.getLocation();
     List<Placemark> pl = await placemarkFromCoordinates(
@@ -79,6 +84,7 @@ class _MainScreenState extends State<MainScreen> {
       if (element.name.toLowerCase() == pl[0].country!.toLowerCase() ||
           element.fullName.toLowerCase() == pl[0].country!.toLowerCase()) {
         setState(() {
+          uploadedCountries = true;
           chosenCountry = element;
         });
       }
@@ -153,7 +159,7 @@ class _MainScreenState extends State<MainScreen> {
                             maxLines: 1,
                             mask: "(###) ###-####",
                             controller: _phoneController,
-                            maxLength: 14,
+                            maxLength: 15,
                             keyboardType:
                                 const TextInputType.numberWithOptions(),
                             decoration: const InputDecoration(
